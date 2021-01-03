@@ -21,18 +21,18 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   
   app.get( "/filteredimage?", async ( req, res ) => {
     // image_url: URL of a publicly accessible image
-    var image_url = req.query.image_url;
+    const image_url = req.query.image_url;
     // 1. validate the image_url query
     if (image_url == null) {
       res.status(404).send("image_url is not specified");
     }
     // 2. call filterImageFromURL(image_url) to filter the image
-    var filteredpath = await filterImageFromURL(image_url);
+    const filteredpath = await filterImageFromURL(image_url);
     console.log(filteredpath)
     // 3. send the resulting file in the response
-    res.sendFile(filteredpath, function(err) {
+    res.status(200).sendFile(filteredpath, function(err) {
       if (err) {
-        res.send("Something is wrong");
+        res.status(502).send("Something is wrong with sending file");
       } else {
         // 4. deletes any files on the server on finish of the response
         deleteLocalFiles([filteredpath]);
